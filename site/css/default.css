@@ -1,7 +1,8 @@
 body {
   font-family: Helvetica;
+  font-size: 14pt;
   margin: auto;
-  width: 800px;
+  width: 50%;
 }
 
 .author {
