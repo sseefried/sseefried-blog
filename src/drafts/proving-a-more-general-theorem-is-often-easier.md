@@ -243,4 +243,4 @@ Agda's ability to define mixfix operators using the `_` character really shon he
 
 In this post I showed you how proving a theorem on a more general formulation of a problem often turns out to be easier than doing it for a specific case. In this particular case you may argue that the specific case could have been defined in terms of `splitAt`, `swap` and `join` _and you'd be correct_. However, I simply didn't spot that at the time. It was only by thinking about what the general pattern of permutation was that allowed me to see that these functions even should be used.
 
-Given that one is likely to generalise a program once a specific solution is found, but proving things on general programs is often easier, it makes sense to do the work, up-front, of generalising when programming in a language like Agda.
+One is likely to generalise a program once a specific solution is found, but proving things on general programs is often easier. Given this is true it makes sense to do the work, up-front, of generalising when programming in a language like Agda.
