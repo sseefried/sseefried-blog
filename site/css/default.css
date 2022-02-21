@@ -16,3 +16,14 @@ p {
 .date {
   font-weight: bold;
 }
+
+pre {
+    padding: 10px 10px 10px 10px;
+    font-size: 10pt;
+}
+
+div.sourceCode {
+    padding: 10px 10px 10px 10px;
+    background-color: #EEEEFF;
+    font-size: 10pt;
+}
