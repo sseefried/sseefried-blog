@@ -1,6 +1,6 @@
 % Proving a more general theorem is often easier
 % Sean Seefried
-% Fri 18 Feb 2022
+% Tue 22 Feb 2022
 
 ## Introduction
 
