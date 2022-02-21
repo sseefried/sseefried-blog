@@ -1,8 +1,12 @@
 body {
   font-family: Helvetica;
-  font-size: 14pt;
+  font-size: 12pt;
   margin: auto;
   width: 50%;
+}
+
+p {
+    color: #333333;
 }
 
 .author {
