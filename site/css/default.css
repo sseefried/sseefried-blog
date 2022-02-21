@@ -23,7 +23,7 @@ pre {
     font-size: 10pt;
 }
 
-code {
+p > code {
     padding: 1px 2px 1px 2px;
     background-color: #EEEEFF;
     font-size: 10pt;
