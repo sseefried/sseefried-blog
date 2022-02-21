@@ -8,7 +8,7 @@ A common approach I follow when programming -- and not proving the correctness o
 
 A simple of example of this might be that I'll write a function to sort a list of integers before going on to generalise it to sort a list of anything that can be ordered.
 
-But I've discovered something counter-intuitive. When proof is involved, this can actually be harder. Proofs on specific structures can actually be a lot harder than proofs on more general structures. If this is true in general then it makes sense to do the hard work of generalising one's programs up-front because it will making proving them correct _easier_. Further I suspect the combined work of a) writing the program and proving it correct will be less than b) writing a specific program, trying to prove it, failing, generalising the program and finally proving it correct.
+But I've discovered something counter-intuitive. When proof is involved, generalising later can actually be harder. Proofs on specific structures can actually be a lot harder than proofs on more general structures. If this is true in general then it makes sense to do the hard work of generalising one's programs up-front because it will making proving them correct _easier_. Further I suspect the combined work of a) writing the program and proving it correct will be less than b) writing a specific program, trying to prove it, failing, generalising the program and finally proving it correct.
 
 Even thought this seems completely counter-intuitive I suspect it's just a consequence of the fact that general structures, lacking concreteness, are _defined by_ their mathematical properties and these mathematical properties are useful in proving correctness.
 
