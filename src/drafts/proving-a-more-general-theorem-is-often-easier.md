@@ -216,7 +216,7 @@ Here is the proof!
       open import Relation.Binary.Reasoning.Setoid (𝔽 (m + n) →-setoid 𝔽 (m + n))
 ```
 
-This proof makes use of a nice helper function I wrote to help with setoid reasoning on _extensional equality_ (`_≗_`).
+If you're confused about the use of `cong-[_]∘⟨_⟩∘[_]` above. It's just a nice helper function I wrote to help with _setoid_ reasoning on _extensional equality_ (`_≗_`). It is defined as follows:
 
 ```agda
   cong-[_]∘⟨_⟩∘[_] :
@@ -231,7 +231,7 @@ This proof makes use of a nice helper function I wrote to help with setoid reaso
       open Relation.Binary.PropositionalEquality using (cong)
 ```
 
- Agda's ability to define mixfix operators using the `_` character really shon here. See how nice this fragment looks? The parts between the square brackets remain untouched while the law between the angle brackets (`⟨⟩`) applies a law. In this case it applies `swap-involutive`.
+Agda's ability to define mixfix operators using the `_` character really shon here. See how nice the fragment below looks? The parts between the square brackets remain untouched while the law between the angle brackets (`⟨⟩`) applies a law, in this case: `swap-involutive`.
 
  ```agda
      (join m n ∘ swap ∘ swap ∘ splitAt m)
@@ -243,4 +243,4 @@ This proof makes use of a nice helper function I wrote to help with setoid reaso
 
 In this post I showed you how proving a theorem on a more general formulation of a problem often turns out to be easier than doing it for a specific case. In this particular case you may argue that the specific case could have been defined in terms of `splitAt`, `swap` and `join` _and you'd be correct_. However, I simply didn't spot that at the time. It was only by thinking about what the general pattern of permutation was that allowed me to see that these functions even should be used.
 
-Given that one is likely to generalise a program once a specific solution is found, but proving things on general programs is often easier, it makes sense to do the work of generalising up-front when programming in a language like Agda.
+Given that one is likely to generalise a program once a specific solution is found, but proving things on general programs is often easier, it makes sense to do the work, up-front, of generalising when programming in a language like Agda.
