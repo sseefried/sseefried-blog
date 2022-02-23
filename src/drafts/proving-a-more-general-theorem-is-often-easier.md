@@ -16,7 +16,7 @@ In this post I'd like to show you an example of a specific program that was hard
 
 ## Bijections that permute a finite set
 
-I defined a _permutation_ as a bijection from `Fin n` to `Fin n` for some `n`. For convenience I renamed `Fin` to `𝔽` because I really value conciseness and it has echoes of `Data.Nat`'s `ℕ`.
+I defined a _permutation_ as a bijection from `Fin n` to `Fin n` for some `n`. For convenience I renamed `Fin` to `𝔽` because I really value conciseness and it has echoes of the `ℕ` value defined in module `Data.Nat`.
 
 ```agda
 Perm : ℕ → Set
