@@ -136,7 +136,7 @@ The make use of the following three theorems from `Data.Fin.Properties` and `Dat
 
 ```agda
 splitAt-join : ∀ m n i → splitAt m (join m n i) ≡ i
-swap-involutive : swap-involutive : swap {A = A} {B = B} ∘ swap ≗ id
+swap-involutive : swap {A = A} {B = B} ∘ swap ≗ id
 join-splitAt : join-splitAt : ∀ m n i → join m n (splitAt m i) ≡ i
 ```
 
