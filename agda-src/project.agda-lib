@@ -1,3 +1,0 @@
-name: machines
-depend: standard-library hardware
-include: .
