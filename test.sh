@@ -9,9 +9,14 @@ for src in agda-snippets-test.md; do
   OUT=$(basename $src .md).html
   pandoc --lua-filter $BASE/fix-links.lua \
     --filter ../../pandoc-filters/AgdaSnippet.hs \
-    -s -c ../css/default.css $src -o $BASE/site/drafts/$OUT
+    -s \
+    -c ../css/default.css \
+    -c ../css/Agda.css \
+    $src \
+    -o $BASE/site/drafts/$OUT
 done
 
+echo "----------------------"
 cd $BASE
 
 cat site/drafts/agda-snippets-test.html
