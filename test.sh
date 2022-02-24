@@ -5,7 +5,7 @@ BASE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $BASE/src/drafts
 
 mkdir -p $BASE/site/drafts
-for src in agda-snippets-test.md; do
+for src in proving-a-more-general-theorem-is-often-easier.md; do
   OUT=$(basename $src .md).html
   pandoc --lua-filter $BASE/fix-links.lua \
     --filter ../../pandoc-filters/AgdaSnippet.hs \
@@ -15,8 +15,3 @@ for src in agda-snippets-test.md; do
     $src \
     -o $BASE/site/drafts/$OUT
 done
-
-echo "----------------------"
-cd $BASE
-
-cat site/drafts/agda-snippets-test.html
