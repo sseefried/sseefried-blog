@@ -20,5 +20,7 @@ ID=$3
 BASE_RELATIVE=$(realpath --relative-to=$SITE_DIR/drafts $BASE | sed 's/\//\\\//g' | sed 's/\./\\./g')
 
 cd "$BASE"
-cat "$MODULE.html" | sed -n "/--pandoc-begin $ID/,/--pandoc-end $ID/p" \
+
+# FIXME: Use of dodgy greater than sign at end
+cat "$MODULE.html" | sed -n "/--pandoc-begin $ID</,/--pandoc-end $ID</p" \
   | sed "s/href=\"\([^\"]*\)\"/href=\"$BASE_RELATIVE\/\\1\"/g" | grep -v '\-\-pandoc'
