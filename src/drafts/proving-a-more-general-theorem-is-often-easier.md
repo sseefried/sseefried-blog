@@ -18,9 +18,8 @@ In this post I'd like to show you an example of a specific program that was hard
 
 I defined a _permutation_ as a bijection from `Fin n` to `Fin n` for some `n`. For convenience I renamed `Fin` to `𝔽` because I really value conciseness and it has echoes of the `ℕ` value defined in module `Data.Nat`.
 
-```agda
-Perm : ℕ → Set
-Perm n = 𝔽 n ↔ 𝔽 n
+``` {htmlDir="2022-02-24-permutations" module="Permutations" def="Perm"}
+Replaced
 ```
 
 In Agda a bijection is constructed from:
