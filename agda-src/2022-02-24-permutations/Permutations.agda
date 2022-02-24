@@ -86,7 +86,7 @@ module RewriteOfJoin where
   open import Data.Fin renaming (join to join′)
   open import Data.Sum
 
-  -- An more direct definition of `join`
+  -- A more direct definition of `join`
   join : ∀ m n → Fin m ⊎ Fin n → Fin (m ℕ.+ n)
 --pandoc-begin join-direct
   join m n (inj₁ x) = inject+ n x

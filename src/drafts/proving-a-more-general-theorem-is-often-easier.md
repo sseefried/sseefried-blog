@@ -45,7 +45,7 @@ I liked the definition for `-1-mod-n` much better than the `+1-mod-n`, but could
 
 The proof took me many hours but eventually I came up with the following. It's a very ugly proof and the only reason I have posted it here is so that you can have an "ugh"-reaction.
 
-```agda {htmlDir="2022-02-24-permutations" module="Permutations" def="ugly-left-inverse-proof"}
+``` {htmlDir="2022-02-24-permutations" module="Permutations" def="ugly-left-inverse-proof"}
 ```
 
 I also tried to prove that `-1-mod-n` was the right inverse of `+1-mod-n` but got stuck almost straight away and gave up.
