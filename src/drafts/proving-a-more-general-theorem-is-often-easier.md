@@ -33,70 +33,19 @@ In Agda a bijection is constructed from:
 
 I thought I'd play around with a very simple permutation that, in the forward direction, evaluates to the successor of its input modulo `n`.
 
-```agda
-+1-mod-n : {n : ℕ} → 𝔽 n → 𝔽 n
-+1-mod-n {ℕ.suc n} m with n ℕ.≟ toℕ m
-... | no m≢n  = suc (lower₁ m m≢n)
-... | yes _ = zero
+``` {htmlDir="2022-02-24-permutations" module="Permutations" def="plus-one-mod-n"}
 ```
 
 And here is its inverse:
 
-```agda
--1-mod-n : {n : ℕ} → 𝔽 n → 𝔽 n
--1-mod-n {ℕ.suc n} zero = fromℕ n
--1-mod-n {ℕ.suc n} (suc m) = inject₁ m
+``` {htmlDir="2022-02-24-permutations" module="Permutations" def="minus-one-mod-n"}
 ```
 
 I liked the definition for `-1-mod-n` much better than the `+1-mod-n`, but couldn't think of an alternative way to define the latter. I then got stuck into trying to prove that `-1-mod-n` is the left-inverse of `+1-mod-n`.
 
 The proof took me many hours but eventually I came up with the following. It's a very ugly proof and the only reason I have posted it here is so that you can have an "ugh"-reaction.
 
-```agda
-i≡j⇒j<i+1 : ∀ {i j } → i ≡ j → j ℕ.< ℕ.suc i
-i≡j⇒j<i+1 {i} {j} i≡j =
-  begin
-    ℕ.suc j
-  ≡⟨ cong ℕ.suc (≡-sym i≡j) ⟩
-    ℕ.suc i
-  ∎
-  where
-    open Relation.Binary.PropositionalEquality renaming (sym to ≡-sym)
-    open ℕ.≤-Reasoning
-
-open ≡-Reasoning
-
-left-inverse′ : (n : ℕ) → (x : 𝔽 n) → -1-mod-n (+1-mod-n x) ≡ x
-left-inverse′ ℕ.zero ()
-left-inverse′ (ℕ.suc ℕ.zero) zero = refl
-left-inverse′ (ℕ.suc (ℕ.suc n′)) x
-            with ℕ.suc n′ ℕ.≟ toℕ x
-...  | no n+1≢x with x
-...               | zero = refl
-...               | suc x =
-    begin
-      -1-mod-n (suc (lower₁ (suc x) n+1≢x))
-    ≡⟨⟩
-      inject₁ (lower₁ (suc x) n+1≢x)
-    ≡⟨  inject₁-lower₁ (suc x) n+1≢x ⟩
-      suc x
-    ∎
-left-inverse′ (ℕ.suc (ℕ.suc n)) x
-     | yes n+1≡x =
-   begin
-     -1-mod-n zero
-   ≡⟨⟩
-     fromℕ (ℕ.suc n)
-   ≡⟨ fromℕ-def (ℕ.suc n) ⟩
-     fromℕ< n+1<n+2
-   ≡⟨ fromℕ<-cong (ℕ.suc n) (toℕ x) n+1≡x n+1<n+2 (i≡j⇒j<i+1 n+1≡x) ⟩
-      fromℕ< (i≡j⇒j<i+1 n+1≡x )
-   ≡⟨ fromℕ<-toℕ x (i≡j⇒j<i+1 n+1≡x)  ⟩
-     x
-   ∎
-   where
-     n+1<n+2 : ℕ.suc n ℕ.< ℕ.suc (ℕ.suc n)
-     n+1<n+2 = ℕ.s≤s (ℕ.s≤s (ℕ.≤-reflexive refl))
+```agda {htmlDir="2022-02-24-permutations" module="Permutations" def="ugly-left-inverse-proof"}
 ```
 
 I also tried to prove that `-1-mod-n` was the right inverse of `+1-mod-n` but got stuck almost straight away and gave up.
@@ -133,6 +82,7 @@ It turns out that there are a number of functions in modules `Data.Fin` and `Dat
 
 The signatures of these functions are:
 
+<!-- TODO: Allow the pulling out of type signatures from read-only modules -->
 ```agda
 splitAt : ∀ m {n} → Fin (m ℕ.+ n) → Fin m ⊎ Fin n
 swap : A ⊎ B → B ⊎ A
@@ -141,6 +91,7 @@ join : ∀ m n → Fin m ⊎ Fin n → Fin (m ℕ.+ n)
 
 The behaviour of `join` is worth looking at in more detail.
 
+<!-- TODO: Allow the pulling out of type signatures from read-only modules -->
 ```agda
 join : ∀ m n → Fin m ⊎ Fin n → Fin (m ℕ.+ n)
 join m n = [ inject+ n , raise {n} m ]′
@@ -155,13 +106,12 @@ where `[_,_]′` is defined as follows:
 
 Simplifying these means that `join` could be rewritten as:
 
-```agda
-join m n (inj₁ x) = inject+ n x
-join m n (inj₂ y) = raise {n} m y
+``` {htmlDir="2022-02-24-permutations" module="Permutations" def="join-direct"}
 ```
 
 The type signatures of the two functions on the RHS of the definition above are:
 
+<!-- TODO: Allow the pulling out of type signatures from read-only modules -->
 ```agda
 inject+ : ∀ {m} n → Fin m → Fin (m ℕ.+ n)
 raise : ∀ {m} n → Fin m → Fin (n ℕ.+ m)
@@ -173,9 +123,7 @@ Function `raise` is a little different to `inject+`. It adds `n` to its argument
 
 We can now now define a function called `splitPermute` that performs the split-swap-join process that I described earlier.
 
-```agda
-splitPermute : (m : ℕ) {n : ℕ} → (𝔽 (m + n) → 𝔽 (n + m))
-splitPermute m {n} = join n m ∘ swap ∘ splitAt m
+``` {htmlDir="2022-02-24-permutations" module="Permutations" def="splitPermute"}
 ```
 
 One really nice thing about this function is that for a given `m + n` the inverse of `splitPermute m` is `splitPermute n`.
@@ -194,48 +142,17 @@ join-splitAt : join-splitAt : ∀ m n i → join m n (splitAt m i) ≡ i
 
 Here is the proof!
 
-```agda
-  inverse : {m n : ℕ} → splitPermute n ∘ splitPermute m ≗ id
-  inverse {m} {n} =
-    begin
-      (splitPermute n ∘ splitPermute m)
-    ≡⟨⟩
-      (join m n ∘ swap ∘ splitAt n) ∘ (join n m ∘ swap ∘ splitAt m)
-    ≡⟨⟩
-      (join m n ∘ swap ∘ splitAt n ∘ join n m ∘ swap ∘ splitAt m)
-    ≈⟨ cong-[ join m n ∘ swap ]∘⟨ splitAt-join n m ⟩∘[ swap ∘ splitAt m ] ⟩
-      (join m n ∘ swap ∘ swap ∘ splitAt m)
-    ≈⟨ cong-[ join m n ]∘⟨ swap-involutive ⟩∘[ splitAt m ] ⟩
-      (join m n ∘ splitAt m)
-    ≈⟨ join-splitAt m n ⟩
-      id
-    ∎
-    where
-      open import Relation.Binary.PropositionalEquality
-      open import Relation.Binary.Reasoning.Setoid (𝔽 (m + n) →-setoid 𝔽 (m + n))
+``` {htmlDir="2022-02-24-permutations" module="Permutations" def="inverse-proof"}
 ```
 
 If you're confused about the use of `cong-[_]∘⟨_⟩∘[_]` above. It's just a nice helper function I wrote to help with _setoid_ reasoning on _extensional equality_ (`_≗_`). It is defined as follows:
 
-```agda
-  cong-[_]∘⟨_⟩∘[_] :
-    {a : Level} {A′ A B B′ : Set a}
-    → (h : B → B′)
-    → {f g : A → B}
-    → f ≗ g
-    → (h′ : A′ → A)
-    → h ∘ f ∘ h′ ≗ h ∘ g ∘ h′
-  cong-[_]∘⟨_⟩∘[_] h {f} {g} f≗g h′ = λ x → cong h (f≗g (h′ x))
-    where
-      open Relation.Binary.PropositionalEquality using (cong)
+``` {htmlDir="2022-02-24-permutations" module="Permutations" def="composition-cong"}
 ```
 
 Agda's ability to define mixfix operators using the `_` character really shon here. See how nice the fragment below looks? The parts between the square brackets remain untouched while the law between the angle brackets (`⟨⟩`) applies a law, in this case: `swap-involutive`.
 
- ```agda
-     (join m n ∘ swap ∘ swap ∘ splitAt m)
-    ≈⟨ cong-[ join m n ]∘⟨ swap-involutive ⟩∘[ splitAt m ] ⟩
-      (join m n ∘ splitAt m)
+ ``` {htmlDir="2022-02-24-permutations" module="Permutations" def="inverse-proof-snippet-1"}
 ```
 
 ## Conclusion

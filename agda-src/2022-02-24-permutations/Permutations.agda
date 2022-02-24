@@ -21,16 +21,20 @@ module +1-mod-n-module where
   Perm n = 𝔽 n ↔ 𝔽 n
 --pandoc-end Perm
 
+--pandoc-begin plus-one-mod-n
   +1-mod-n : {n : ℕ} → 𝔽 n → 𝔽 n
   +1-mod-n {ℕ.suc n} m with n ℕ.≟ toℕ m
   ... | no m≢n  = suc (lower₁ m m≢n)
   ... | yes _ = zero
+--pandoc-end plus-one-mod-n
 
+--pandoc-begin minus-one-mod-n
   -1-mod-n : {n : ℕ} → 𝔽 n → 𝔽 n
   -1-mod-n {ℕ.suc n} zero = fromℕ n
   -1-mod-n {ℕ.suc n} (suc m) = inject₁ m
+--pandoc-end minus-one-mod-n
 
-
+--pandoc-begin ugly-left-inverse-proof
   i≡j⇒j<i+1 : ∀ {i j } → i ≡ j → j ℕ.< ℕ.suc i
   i≡j⇒j<i+1 {i} {j} i≡j =
     begin
@@ -75,6 +79,19 @@ module +1-mod-n-module where
      where
        n+1<n+2 : ℕ.suc n ℕ.< ℕ.suc (ℕ.suc n)
        n+1<n+2 = ℕ.s≤s (ℕ.s≤s (ℕ.≤-reflexive refl))
+--pandoc-end ugly-left-inverse-proof
+
+module RewriteOfJoin where
+  import Data.Nat as ℕ
+  open import Data.Fin renaming (join to join′)
+  open import Data.Sum
+
+  -- An more direct definition of `join`
+  join : ∀ m n → Fin m ⊎ Fin n → Fin (m ℕ.+ n)
+--pandoc-begin join-direct
+  join m n (inj₁ x) = inject+ n x
+  join m n (inj₂ y) = raise {n} m y
+--pandoc-end join-direct
 
 module SplitPermute1 where
 
@@ -88,9 +105,12 @@ module SplitPermute1 where
   open import Function.Bundles
   open import Level using (Level)
 
+--pandoc-begin splitPermute
   splitPermute : (m : ℕ) {n : ℕ} → (𝔽 (m + n) → 𝔽 (n + m))
   splitPermute m {n} = join n m ∘ swap ∘ splitAt m
+--pandoc-end splitPermute
 
+--pandoc-begin composition-cong
   cong-[_]∘⟨_⟩∘[_] :
     {a : Level} {A′ A B B′ : Set a}
     → (h : B → B′)
@@ -101,25 +121,35 @@ module SplitPermute1 where
   cong-[_]∘⟨_⟩∘[_] h {f} {g} f≗g h′ = λ x → cong h (f≗g (h′ x))
     where
       open Relation.Binary.PropositionalEquality using (cong)
+--pandoc-end composition-cong
 
+--pandoc-begin inverse-proof
   inverse : {m n : ℕ} → splitPermute n ∘ splitPermute m ≗ id
   inverse {m} {n} =
     begin
-      (splitPermute n ∘ splitPermute m)                             ≡⟨⟩
-      (join m n ∘ swap ∘ splitAt n) ∘ (join n m ∘ swap ∘ splitAt m) ≡⟨⟩
-      (join m n ∘ swap ∘ splitAt n ∘ join n m ∘ swap ∘ splitAt m)   ≈⟨ cong-[ join m n ∘ swap ]∘⟨ splitAt-join n m ⟩∘[ swap ∘ splitAt m ] ⟩
-      (join m n ∘ swap ∘ swap ∘ splitAt m)                          ≈⟨ cong-[ join m n ]∘⟨ swap-involutive ⟩∘[ splitAt m ] ⟩
-      (join m n ∘ splitAt m)                                        ≈⟨ join-splitAt m n ⟩
+      (splitPermute n ∘ splitPermute m)
+    ≡⟨⟩
+      (join m n ∘ swap ∘ splitAt n) ∘ (join n m ∘ swap ∘ splitAt m)
+    ≡⟨⟩
+      (join m n ∘ swap ∘ splitAt n ∘ join n m ∘ swap ∘ splitAt m)
+    ≈⟨ cong-[ join m n ∘ swap ]∘⟨ splitAt-join n m ⟩∘[ swap ∘ splitAt m ] ⟩
+--pandoc-begin inverse-proof-snippet-1
+      (join m n ∘ swap ∘ swap ∘ splitAt m)
+    ≈⟨ cong-[ join m n ]∘⟨ swap-involutive ⟩∘[ splitAt m ] ⟩
+      (join m n ∘ splitAt m)
+--pandoc-end inverse-proof-snippet-1
+    ≈⟨ join-splitAt m n ⟩
       id
     ∎
     where
       open import Relation.Binary.PropositionalEquality
       open import Relation.Binary.Reasoning.Setoid (𝔽 (m + n) →-setoid 𝔽 (m + n))
+--pandoc-end inverse-proof
 
   splitPermute↔ : (m : ℕ) {n : ℕ} → (𝔽 (m + n) ↔ 𝔽 (n + m))
   splitPermute↔ m {n} = mk↔′ (splitPermute m) (splitPermute n) (inverse {n} {m}) (inverse {m} {n})
 
-module SplitPermute2 where
+module SplitPermuteWithConstructiveCorrectness where
 
   open import Data.Nat using (ℕ; _+_)
   open import Data.Fin renaming (Fin to 𝔽) hiding (_+_)
@@ -137,5 +167,7 @@ module SplitPermute2 where
   swap↔ {a} {b} {A} {B} = mk↔′ swap swap swap-involutive swap-involutive
 --pandoc-end swap
 
+--pandoc-begin splitPermute-bijection
   splitPermute↔ : (m : ℕ) {n : ℕ} → 𝔽 (m + n) ↔ 𝔽 (n + m)
   splitPermute↔ m {n} = (+↔⊎ {m} {n} ∘-↔ swap↔) ∘-↔ sym-↔ +↔⊎
+--pandoc-end splitPermute-bijection
