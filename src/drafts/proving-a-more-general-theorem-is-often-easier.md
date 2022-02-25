@@ -4,7 +4,7 @@
 
 ## Introduction
 
-When programming I often "generalise from the specific". I find it easier to work with more concrete concepts first and only later to generalise my solution. At least that's the way I program in languages in which I can't also prove the correctness of my programs.
+When programming, I often "generalise from the specific". I find it easier to work with more concrete concepts first and only later to generalise my solution. At least that's the way I program in languages in which I can't also prove the correctness of my programs.
 
 A simple example of this style of programming might be that I'll write a function to sort a list of integers before going on to generalise it to sort a list of anything that can be ordered.
 
