@@ -4,15 +4,15 @@
 
 ## Introduction
 
-A common approach I follow when programming -- and not proving the correctness of those programs -- is to "generalise from the specific". While trying to solve a programming problem, I find it easier to work with more concrete concepts first and only later to generalise my solution.
+When programming I often "generalise from the specific". I find it easier to work with more concrete concepts first and only later to generalise my solution. At least that's the way I program in languages in which I can't also prove the correctness of my programs.
 
-A simple example of this might be that I'll write a function to sort a list of integers before going on to generalise it to sort a list of anything that can be ordered.
+A simple example of this style of programming might be that I'll write a function to sort a list of integers before going on to generalise it to sort a list of anything that can be ordered.
 
-But I've discovered something counter-intuitive. When proof is involved, generalising later can actually be harder. Proofs on specific structures can actually be a lot harder than proofs on more general structures. If this is true in general then it makes sense to do the hard work of generalising one's programs up-front because it will making proving them correct _easier_. Further I suspect the combined work of a) writing the program and proving it correct will be less than b) writing a specific program, trying to prove it, failing, generalising the program and finally proving it correct.
+But I've discovered something counter-intuitive. When you're also interested in proving your programs correct, generalising later can actually be harder. In my experience proofs on specific structures can be a lot harder than proofs on more general structures. If this is true, in general, then it makes sense to do the hard work of generalising one's programs up-front because it will making proving them correct _easier_. Further I suspect the combined work of a) writing the program and proving it correct will be less than b) writing a specific program, trying to prove it, failing, generalising the program and finally proving it correct.
 
-Even thought this seems completely counter-intuitive I suspect it's just a consequence of the fact that general structures, lacking concreteness, are _defined by_ their mathematical properties and these mathematical properties are useful in proving correctness.
+This disparity in difficulty seems counter-intuitive. I suspect it's just a consequence of the fact that general structures, lacking concreteness, are _defined by_ their mathematical properties and these mathematical properties are useful in proving correctness.
 
-In this post I'd like to show you an example of a specific program that was hard to prove correct but became much easier once I had generalised the program.
+In this post I'd like to show you an example of a specific program that was hard to prove correct but became much easier once I had generalised it.
 
 ## Bijections that permute a finite set
 
@@ -31,7 +31,7 @@ In Agda a bijection is constructed from:
 
 ## Introducing `+1-mod-n` and `-1-mod-n`
 
-I thought I'd play around with a very simple permutation that, in the forward direction, evaluates to the successor of its input modulo `n`.
+To start I thought I'd play around with a very simple permutation that, in the forward direction, evaluates to the successor of its input modulo `n`.
 
 ``` {htmlDir="2022-02-24-permutations" module="Permutations" delimeters="plus-one-mod-n"}
 ```
@@ -41,9 +41,9 @@ And here is its inverse:
 ``` {htmlDir="2022-02-24-permutations" module="Permutations" delimeters="minus-one-mod-n"}
 ```
 
-I liked the definition for `-1-mod-n` much better than the `+1-mod-n`, but couldn't think of an alternative way to define the latter. I then got stuck into trying to prove that `-1-mod-n` is the left-inverse of `+1-mod-n`.
+I liked the definition for `-1-mod-n` much better than the definition of `+1-mod-n`, but couldn't think of an alternative way to define the latter. I then got stuck into trying to prove that `-1-mod-n` is the left-inverse of `+1-mod-n`.
 
-The proof took me many hours but eventually I came up with the following. It's a very ugly proof and the only reason I have posted it here is so that you can have an "ugh"-reaction.
+The proof took me many hours but eventually I came up with the following. It's a very ugly proof and the only reason I have posted it here is so that you can have the appropriate "ugh"-reaction.
 
 ``` {htmlDir="2022-02-24-permutations" module="Permutations" delimeters="ugly-left-inverse-proof"}
 ```
@@ -134,13 +134,13 @@ We can now now define a function called `splitPermute` that performs the split-s
 ``` {htmlDir="2022-02-24-permutations" module="Permutations" delimeters="splitPermute"}
 ```
 
-One really nice thing about this function is that for a given `m + n` the inverse of `splitPermute m` is `splitPermute n`.
+A really nice thing about `splitPermute` is that for a given `m + n` the inverse of `splitPermute m` is `splitPermute n`.
 
 Remember function `+1-mod-n` from earlier?  It is the special case of `splitPermute` where `n = 1`.
 
 Yet the proof that `splitPermute n` is the left inverse of `splitPermute m` is _much simpler_ than the proof that `-1-mod-n` is the left inverse of `+1-mod-n`.
 
-The make use of the following three theorems from `Data.Fin.Properties` and `Data.Sum.Properties`
+The proof makes use of the following three theorems from `Data.Fin.Properties` and `Data.Sum.Properties`
 
 
 ``` {htmlDir="2022-02-24-permutations" module="Data.Fin.Properties" sig="splitAt-join"}
@@ -150,8 +150,7 @@ The make use of the following three theorems from `Data.Fin.Properties` and `Dat
 ``` {htmlDir="2022-02-24-permutations" module="Data.Fin.Properties" sig="join-splitAt"}
 ```
 
-
-Here is the proof!
+And here is the proof!
 
 ``` {htmlDir="2022-02-24-permutations" module="Permutations" delimeters="inverse-proof"}
 ```
@@ -168,6 +167,6 @@ Agda's ability to define mixfix operators using the `_` character really shon he
 
 ## Conclusion
 
-In this post I showed you how proving a theorem on a more general formulation of a problem often turns out to be easier than doing it for a specific case. In this particular case you may argue that the specific case could have been defined in terms of `splitAt`, `swap` and `join` _and you'd be correct_. However, I simply didn't spot that at the time. It was only by thinking about what the general pattern of permutation was that allowed me to see that these functions even should be used.
+In this post I showed you how proving a theorem on a more general formulation of a problem often turns out to be easier than doing it for a specific case. In this particular case you may argue that the specific case could have been defined in terms of `splitAt`, `swap` and `join` _and you'd be correct_. However, I simply didn't spot that at the time. It was only by thinking about the general pattern of permutation that I was able to see that these functions should even be used.
 
-One is likely to generalise a program once a specific solution is found, but proving things on general programs is often easier. Given this is true it makes sense to do the work, up-front, of generalising when programming in a language like Agda.
+One is likely to generalise a program once a specific solution is found, but proving things on general programs is often easier. Assuming this is true it makes sense to do the work of generalising up-front.
