@@ -18,7 +18,7 @@ In this post I'd like to show you an example of a specific program that was hard
 
 I defined a _permutation_ as a bijection from `Fin n` to `Fin n` for some `n`. For convenience I renamed `Fin` to `𝔽` because I really value conciseness and it has echoes of the `ℕ` value defined in module `Data.Nat`.
 
-``` {htmlDir="2022-02-24-permutations" module="Permutations" def="Perm"}
+``` {htmlDir="2022-02-24-permutations" module="Permutations" delimeters="Perm"}
 Replaced
 ```
 
@@ -33,19 +33,19 @@ In Agda a bijection is constructed from:
 
 I thought I'd play around with a very simple permutation that, in the forward direction, evaluates to the successor of its input modulo `n`.
 
-``` {htmlDir="2022-02-24-permutations" module="Permutations" def="plus-one-mod-n"}
+``` {htmlDir="2022-02-24-permutations" module="Permutations" delimeters="plus-one-mod-n"}
 ```
 
 And here is its inverse:
 
-``` {htmlDir="2022-02-24-permutations" module="Permutations" def="minus-one-mod-n"}
+``` {htmlDir="2022-02-24-permutations" module="Permutations" delimeters="minus-one-mod-n"}
 ```
 
 I liked the definition for `-1-mod-n` much better than the `+1-mod-n`, but couldn't think of an alternative way to define the latter. I then got stuck into trying to prove that `-1-mod-n` is the left-inverse of `+1-mod-n`.
 
 The proof took me many hours but eventually I came up with the following. It's a very ugly proof and the only reason I have posted it here is so that you can have an "ugh"-reaction.
 
-``` {htmlDir="2022-02-24-permutations" module="Permutations" def="ugly-left-inverse-proof"}
+``` {htmlDir="2022-02-24-permutations" module="Permutations" delimeters="ugly-left-inverse-proof"}
 ```
 
 I also tried to prove that `-1-mod-n` was the right inverse of `+1-mod-n` but got stuck almost straight away and gave up.
@@ -82,39 +82,47 @@ It turns out that there are a number of functions in modules `Data.Fin` and `Dat
 
 The signatures of these functions are:
 
-<!-- TODO: Allow the pulling out of type signatures from read-only modules -->
-```agda
-splitAt : ∀ m {n} → Fin (m ℕ.+ n) → Fin m ⊎ Fin n
-swap : A ⊎ B → B ⊎ A
-join : ∀ m n → Fin m ⊎ Fin n → Fin (m ℕ.+ n)
+
+``` {htmlDir="2022-02-24-permutations" module="Data.Fin.Base" sig="splitAt"}
+splitAt definition
+```
+
+``` {htmlDir="2022-02-24-permutations" module="Data.Sum.Base" sig="swap"}
+swap definition
+```
+
+``` {htmlDir="2022-02-24-permutations" module="Data.Fin.Base" sig="join"}
+join definition
 ```
 
 The behaviour of `join` is worth looking at in more detail.
 
-<!-- TODO: Allow the pulling out of type signatures from read-only modules -->
-```agda
-join : ∀ m n → Fin m ⊎ Fin n → Fin (m ℕ.+ n)
-join m n = [ inject+ n , raise {n} m ]′
+``` {htmlDir="2022-02-24-permutations" module="Data.Fin.Base" fun="join"}
+join definition
 ```
 
 where `[_,_]′` is defined as follows:
 
-```agda
-[ f , g ]′ (inj₁ x) = f x
-[ f , g ]′ (inj₂ y) = g y
+``` {htmlDir="2022-02-24-permutations" module="Data.Sum.Base" fun="[_,_]′"}
+[_,_]′ definition
+```
+
+and
+
+``` {htmlDir="2022-02-24-permutations" module="Data.Sum.Base" fun="[_,_]"}
+[_,_] definition
 ```
 
 Simplifying these means that `join` could be rewritten as:
 
-``` {htmlDir="2022-02-24-permutations" module="Permutations" def="join-direct"}
+``` {htmlDir="2022-02-24-permutations" module="Permutations" delimeters="join-direct"}
 ```
 
 The type signatures of the two functions on the RHS of the definition above are:
 
-<!-- TODO: Allow the pulling out of type signatures from read-only modules -->
-```agda
-inject+ : ∀ {m} n → Fin m → Fin (m ℕ.+ n)
-raise : ∀ {m} n → Fin m → Fin (n ℕ.+ m)
+``` {htmlDir="2022-02-24-permutations" module="Data.Fin.Base" sig="inject+"}
+```
+``` {htmlDir="2022-02-24-permutations" module="Data.Fin.Base" sig="raise"}
 ```
 
 Function `inject+` takes a `Fin m` and "injects" it into the `Fin (m ℕ.+ n)` type without changing the structure of the value. e.g. For value `suc (suc zero) : Fin 3`, `inject+ (suc (suc zero))` evaluates to `suc (suc zero) : Fin 5` for `m = 3` and `n = 2`.
@@ -123,7 +131,7 @@ Function `raise` is a little different to `inject+`. It adds `n` to its argument
 
 We can now now define a function called `splitPermute` that performs the split-swap-join process that I described earlier.
 
-``` {htmlDir="2022-02-24-permutations" module="Permutations" def="splitPermute"}
+``` {htmlDir="2022-02-24-permutations" module="Permutations" delimeters="splitPermute"}
 ```
 
 One really nice thing about this function is that for a given `m + n` the inverse of `splitPermute m` is `splitPermute n`.
@@ -134,25 +142,28 @@ Yet the proof that `splitPermute n` is the left inverse of `splitPermute m` is _
 
 The make use of the following three theorems from `Data.Fin.Properties` and `Data.Sum.Properties`
 
-```agda
-splitAt-join : ∀ m n i → splitAt m (join m n i) ≡ i
-swap-involutive : swap {A = A} {B = B} ∘ swap ≗ id
-join-splitAt : join-splitAt : ∀ m n i → join m n (splitAt m i) ≡ i
+
+``` {htmlDir="2022-02-24-permutations" module="Data.Fin.Properties" sig="splitAt-join"}
 ```
+``` {htmlDir="2022-02-24-permutations" module="Data.Sum.Properties" sig="swap-involutive"}
+```
+``` {htmlDir="2022-02-24-permutations" module="Data.Fin.Properties" sig="join-splitAt"}
+```
+
 
 Here is the proof!
 
-``` {htmlDir="2022-02-24-permutations" module="Permutations" def="inverse-proof"}
+``` {htmlDir="2022-02-24-permutations" module="Permutations" delimeters="inverse-proof"}
 ```
 
 If you're confused about the use of `cong-[_]∘⟨_⟩∘[_]` above. It's just a nice helper function I wrote to help with _setoid_ reasoning on _extensional equality_ (`_≗_`). It is defined as follows:
 
-``` {htmlDir="2022-02-24-permutations" module="Permutations" def="composition-cong"}
+``` {htmlDir="2022-02-24-permutations" module="Permutations" delimeters="composition-cong"}
 ```
 
 Agda's ability to define mixfix operators using the `_` character really shon here. See how nice the fragment below looks? The parts between the square brackets remain untouched while the law between the angle brackets (`⟨⟩`) applies a law, in this case: `swap-involutive`.
 
- ``` {htmlDir="2022-02-24-permutations" module="Permutations" def="inverse-proof-snippet-1"}
+ ``` {htmlDir="2022-02-24-permutations" module="Permutations" delimeters="inverse-proof-snippet-1"}
 ```
 
 ## Conclusion
