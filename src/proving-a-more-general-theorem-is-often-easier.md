@@ -1,6 +1,6 @@
-% DRAFT DRAFT DRAFT Proving a more general theorem is often easier
+% Proving a more general theorem is often easier
 % Sean Seefried
-% Sat 26 Feb 2022
+% Tue 22 Feb 2022
 
 ## Introduction
 

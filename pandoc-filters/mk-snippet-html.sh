@@ -5,21 +5,20 @@
 #
 
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+BASE_DIR="$( cd $THIS_DIR/.. && pwd)"
 SITE_DIR="$( cd $THIS_DIR/../site && pwd)"
 cd $THIS_DIR
 
-[ $# -lt 4 ] && { echo "Usage: $(basename $0) <cmd> <basedir> <module> <id>"; exit 1;}
+[ $# -lt 5 ] && { echo "Usage: $(basename $0) <postdir> <cmd> <basedir> <module> <id>"; exit 1;}
 
-CMD=$1
-BASE=$(cd $SITE_DIR/agda-html/$2 && pwd)
-MODULE=$3
+ABS_POST_DIR=$(cd $BASE_DIR/site/$1 && pwd)
+CMD=$2
+BASE=$(cd $SITE_DIR/agda-html/$3 && pwd)
+MODULE=$4
 # Need to escape certain special characters
-ID=$(echo $4 | sed 's/\[/\\[/g' | sed 's/\]/\\]/g' | sed 's/\+/\\+/g')
+ID=$(echo $5 | sed 's/\[/\\[/g' | sed 's/\]/\\]/g' | sed 's/\+/\\+/g')
 
-#
-# FIXME: Handle drafts properly
-#
-BASE_RELATIVE=$(realpath --relative-to=$SITE_DIR/drafts $BASE | sed 's/\//\\\//g' | sed 's/\./\\./g')
+BASE_RELATIVE=$(realpath --relative-to=$ABS_POST_DIR $BASE | sed 's/\//\\\//g' | sed 's/\./\\./g')
 
 cd "$BASE"
 

@@ -2,26 +2,20 @@
 
 BASE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-cd $BASE/src
 
 mkdir -p $BASE/site
-for src in *.md; do
-  OUT=$(basename $src .md).html
-  pandoc --lua-filter $BASE/fix-links.lua -s \
-    -c css/default.css \
-    -c css/Agda.css \
-    $src -o $BASE/site/$OUT
-done
-
-cd $BASE/src/drafts
-
 mkdir -p $BASE/site/drafts
-for src in *.md; do
+
+cd $BASE/src
+for src in *.md drafts/*.md; do
+  POST_DIR=$(dirname $src)
   OUT=$(basename $src .md).html
-  pandoc --lua-filter $BASE/fix-links.lua \
+  CSS=$(realpath --relative-to $POST_DIR $BASE/src)/css
+  pandoc --lua-filter $BASE/fix-links.lua -s \
+    --metadata="postDir:$POST_DIR" \
+    --metadata="baseDir:$BASE" \
     --filter $BASE/pandoc-filters/AgdaSnippet.hs \
-    -s \
-    -c ../css/default.css \
-    -c ../css/Agda.css \
-    $src -o $BASE/site/drafts/$OUT
+    -c "$CSS/default.css" \
+    -c "$CSS/Agda.css" \
+    $src -o $BASE/site/$POST_DIR/$OUT
 done
