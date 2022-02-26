@@ -8,8 +8,8 @@ mkdir -p $BASE/site
 for src in *.md; do
   OUT=$(basename $src .md).html
   pandoc --lua-filter $BASE/fix-links.lua -s \
-    -c ../css/default.css \
-    -c ../css/Agda.css \
+    -c css/default.css \
+    -c css/Agda.css \
     $src -o $BASE/site/$OUT
 done
 
