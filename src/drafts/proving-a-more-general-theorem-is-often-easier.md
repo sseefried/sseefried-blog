@@ -97,19 +97,19 @@ join definition
 
 The behaviour of `join` is worth looking at in more detail.
 
-``` {htmlDir="2022-02-24-permutations" module="Data.Fin.Base" fun="join"}
+``` {htmlDir="2022-02-24-permutations" module="Data.Fin.Base" fun="join" lines="2" }
 join definition
 ```
 
 where `[_,_]′` is defined as follows:
 
-``` {htmlDir="2022-02-24-permutations" module="Data.Sum.Base" fun="[_,_]′"}
+``` {htmlDir="2022-02-24-permutations" module="Data.Sum.Base" fun="[_,_]′" lines="2" }
 [_,_]′ definition
 ```
 
 and
 
-``` {htmlDir="2022-02-24-permutations" module="Data.Sum.Base" fun="[_,_]"}
+``` {htmlDir="2022-02-24-permutations" module="Data.Sum.Base" fun="[_,_]" lines="5"}
 [_,_] definition
 ```
 
