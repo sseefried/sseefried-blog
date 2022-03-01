@@ -38,7 +38,7 @@ doBlock (postDir, baseDir) cb@(CodeBlock (id, classes, namevals) contents)
              "sig" ->
                signatureOf ident
              _ -> const ""
-       let outHtml = fixLinks baseDir htmlDir .  htmlFilter $ inHtml
+       let outHtml = fixLinks postDir htmlDir .  htmlFilter $ inHtml
        return $ Plain [ RawInline (Format "html")
                       ("<pre class=\"Agda\">" <> outHtml <> "</pre>") ]
   | otherwise = return cb
@@ -92,7 +92,13 @@ signatureOf :: Text -> Filter
 signatureOf ident = functionDef ident 1
 
 fixLinks :: Text -> Text -> Filter
-fixLinks baseDir htmlDir = T.replace "href=\"" ("href=\"" <> baseDir <> "/site/agda-html/" <> htmlDir <> "/")
+fixLinks postDir htmlDir =
+    T.replace "href=\""
+      (  "href=\""
+      <> if postDir == "." then "." else ".."
+      <> "/agda-html/"
+      <> htmlDir
+      <> "/")
 
 
 main :: IO ()
