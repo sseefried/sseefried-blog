@@ -52,18 +52,18 @@ doBlock (postDir, baseDir) cb@(CodeBlock (id, classes, namevals) contents)
       | Just ident <- lookup "delimeters" namevals
       = Just (Delimeters ident)
 
-      | Just ident <- lookup "fun" namevals
+      | Just ident       <- lookup "fun" namevals
       , Just numLinesTxt <- lookup "lines" namevals
-      , Just numLines <- readMaybe' numLinesTxt
+      , Just numLines    <- readMaybe' numLinesTxt
       = Just (Function ident numLines)
 
       | Just ident <- lookup "sig" namevals
       = Just (Signature ident)
 
-      | Just startTxt <- lookup "lineNumber" namevals
-      , Just start <- readMaybe' startTxt
+      | Just startTxt    <- lookup "lineNumber" namevals
+      , Just start       <- readMaybe' startTxt
       , Just numLinesTxt <- lookup "lines" namevals
-      , Just numLines <- readMaybe' numLinesTxt
+      , Just numLines    <- readMaybe' numLinesTxt
       = Just (LineNumber start numLines)
 
       | otherwise = Nothing
