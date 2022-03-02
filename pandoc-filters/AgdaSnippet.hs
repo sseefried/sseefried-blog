@@ -6,6 +6,7 @@
 import Prelude
 import Data.List
 import qualified Data.List as L
+import Text.Read (readMaybe)
 import Text.Pandoc.JSON
 import Data.Text (Text)
 import qualified Data.Text as T
@@ -14,39 +15,57 @@ import System.IO (stderr)
 import System.Process (readProcess)
 import System.Posix.Directory
 
+data Command =
+    Delimeters Text
+  | Function Text Int
+  | Signature Text
+  | LineNumber Int Int
+
 errP :: Text -> IO ()
 errP txt = TIO.hPutStr stderr (txt <> "\n")
 
 errP' :: String -> IO ()
 errP' = errP . T.pack
 
+readMaybe' :: Text -> Maybe Int
+readMaybe' = readMaybe . T.unpack
+
 doBlock :: (Text, Text) -> (Block -> IO Block)
 doBlock (postDir, baseDir) cb@(CodeBlock (id, classes, namevals) contents)
   | Just htmlDir <- lookup "htmlDir" namevals
   , Just modul <- lookup "module" namevals
-  , Just (cmd, ident) <- getCmdAndIdent namevals = do
+  , Just cmd <- getCommand namevals = do
        inHtml <- TIO.readFile $ agdaHtmlFilepath baseDir htmlDir modul
        let
          htmlFilter =
            case cmd of
-             "delimeters" ->
-                delimitedCodeBlock ident
-             "fun" ->
-                case lookup "lines" namevals of
-                   Just n -> functionDef ident (read (T.unpack n))
-                   Nothing -> const ""
-             "sig" ->
-               signatureOf ident
-             _ -> const ""
+             Delimeters ident          -> delimitedCodeBlock ident
+             Function ident numLines   -> functionDef ident numLines
+             Signature ident           -> signatureOf ident
+             LineNumber start numLines -> region start numLines
        let outHtml = fixLinks postDir htmlDir .  htmlFilter $ inHtml
        return $ Plain [ RawInline (Format "html")
                       ("<pre class=\"Agda\">" <> outHtml <> "</pre>") ]
   | otherwise = return cb
   where
-    getCmdAndIdent namevals
-      | Just ident <- lookup "delimeters" namevals = Just ("delimeters", ident)
-      | Just ident <- lookup "fun" namevals = Just ("fun", ident)
-      | Just ident <- lookup "sig" namevals = Just ("sig", ident)
+    getCommand namevals
+      | Just ident <- lookup "delimeters" namevals
+      = Just (Delimeters ident)
+
+      | Just ident <- lookup "fun" namevals
+      , Just numLinesTxt <- lookup "lines" namevals
+      , Just numLines <- readMaybe' numLinesTxt
+      = Just (Function ident numLines)
+
+      | Just ident <- lookup "sig" namevals
+      = Just (Signature ident)
+
+      | Just startTxt <- lookup "lineNumber" namevals
+      , Just start <- readMaybe' startTxt
+      , Just numLinesTxt <- lookup "lines" namevals
+      , Just numLines <- readMaybe' numLinesTxt
+      = Just (LineNumber start numLines)
+
       | otherwise = Nothing
 doBlock _ x = return x
 
@@ -90,6 +109,9 @@ functionDef ident n = lineFilter $
 
 signatureOf :: Text -> Filter
 signatureOf ident = functionDef ident 1
+
+region :: Int -> Int -> Filter
+region start numLines = lineFilter $ L.take numLines . L.drop (start - 1)
 
 fixLinks :: Text -> Text -> Filter
 fixLinks postDir htmlDir =

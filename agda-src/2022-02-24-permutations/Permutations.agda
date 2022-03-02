@@ -146,8 +146,10 @@ module SplitPermute1 where
       open import Relation.Binary.Reasoning.Setoid (𝔽 (m + n) →-setoid 𝔽 (m + n))
 --pandoc-end inverse-proof
 
+--pandoc-begin splitPermute-bijection-1
   splitPermute↔ : (m : ℕ) {n : ℕ} → (𝔽 (m + n) ↔ 𝔽 (n + m))
   splitPermute↔ m {n} = mk↔′ (splitPermute m) (splitPermute n) (inverse {n} {m}) (inverse {m} {n})
+--pandoc-end splitPermute-bijection-1
 
 module SplitPermuteWithConstructiveCorrectness where
 
@@ -162,12 +164,12 @@ module SplitPermuteWithConstructiveCorrectness where
   open import Data.Sum.Properties
   open Inverse
 
---pandoc-begin swap
+--pandoc-begin swap-bijection
   swap↔ : ∀ {a b} {A : Set a} {B : Set b} →  (A ⊎ B) ↔ (B ⊎ A)
   swap↔ {a} {b} {A} {B} = mk↔′ swap swap swap-involutive swap-involutive
---pandoc-end swap
+--pandoc-end swap-bijection
 
---pandoc-begin splitPermute-bijection
+--pandoc-begin splitPermute-bijection-2
   splitPermute↔ : (m : ℕ) {n : ℕ} → 𝔽 (m + n) ↔ 𝔽 (n + m)
   splitPermute↔ m {n} = (+↔⊎ {m} {n} ∘-↔ swap↔) ∘-↔ sym-↔ +↔⊎
---pandoc-end splitPermute-bijection
+--pandoc-end splitPermute-bijection-2
