@@ -49,7 +49,7 @@ That's it! The function, its inverse and accompanying proofs of invertibility ha
 
 In order to understand this code you will need to study the definitions of `+↔⊎` and `swap↔`. `+↔⊎` is defined in module `Data.Fin.Properties` and has the following definition:
 
-```{ htmlDir="2022-02-24-permutations" module="Data.Sum.Properties" fun="+↔⊎" lines="2" }
+```{ htmlDir="2022-02-24-permutations" module="Data.Fin.Properties" fun="+↔⊎" lines="2" }
 +↔⊎ function definition
 ```
 
@@ -63,7 +63,7 @@ I submitted a PR to the GitHub `agda-stdlib` repository which added this functio
 
 
 ### Compositional correctness via the bijection composition operator `∘-↔`
-p
+
 The magic of this approach is in the `∘-↔` operator which is defined in module `Function.Construct.Composition`. It is a synonym for function `inverse` which is defined as:
 
 ```{ htmlDir="2022-02-24-permutations" module="Function.Construct.Composition" lineNumber="196" lines="8" }
