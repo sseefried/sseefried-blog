@@ -6,7 +6,7 @@
 
 Writing and proving programs correct is generally considered to be much harder than writing them alone. There is quite a bit of evidence to support this position but I will not cover it in this post. [Conal Elliott](http://conal.net) has a hunch about why proving programs correct is so much more difficult. He thinks the main reason is that -- most of the time --  people attempt to prove properties about existing systems; systems designed in the absence of mathematical constraints.
 
-If "proving at the end" is the main reason for the difficulty of proof, then it may be the case that an approach where we simultaneously_ write _and_ prove is the solution.
+If "proving at the end" is the main reason for the difficulty of proof, then it may be the case that an approach where we _simultaneously_ write _and_ prove is the solution.
 
 It is a well-recognised principle that composing programs from simpler building blocks is a good way to construct larger programs. Another well-recognised "good thing" is the [principle of compositionality](https://en.wikipedia.org/wiki/Principle_of_compositionality) which states that when trying to reason about the composition of A and B, it is desirable that the meaning of the composition is determined by the meanings of A, B and the rules used to combine them.
 
