@@ -88,6 +88,6 @@ However, by using the approach of compositional correctness, we actually applied
 
 ## Conclusion
 
-A style of programming coined by Conal Elliott and called _compositional correctness_ can be used to reduce the cost of proving one's programs correct. "Proving at the end" involves carefully selecting _specific_ theorems while compositional correctness uses _general_ theorems (at specific types) to achieve its goals.
+A style of programming coined by Conal Elliott and called _compositional correctness_ can be used to reduce the cost of proving one's programs correct. In the example we consider "proving at the end" involved carefully selecting _specific_ theorems while _compositional correctness_ used a _general_ theorem (at three specific types) to achieve its goals.
 
 It will remain to be seen whether compositional correctness radically reduces the difficulty of proving program correctness, but it is a very promising candidate.
