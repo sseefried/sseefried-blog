@@ -3,7 +3,6 @@ body {
   font-size: 12pt;
   margin: auto;
   width: 50%;
-
 }
 
 p {
@@ -25,7 +24,8 @@ pre {
 }
 
 pre.Agda {
-  background-color: #EEEEFF;
+    background-color: #EEEEFF;
+    overflow: auto;
 }
 
 p > code {

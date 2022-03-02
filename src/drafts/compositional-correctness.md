@@ -4,50 +4,50 @@
 
 ## Introduction
 
-Proving programs correct is generally considered to be much harder than simply writing programs. There is quite a bit of evidence to support this position even though I will not go into it today. [Conal Elliott](http://conal.net) has a hunch about why this is. He thinks that main reason that proof is so difficultis that, most of the time, people attempt to prove properties about existing systems; systems that were designed in the absence of mathematical constraints.
+Writing and proving programs correct is generally considered to be much harder than writing them alone. There is quite a bit of evidence to support this position but I will not cover it in this post. [Conal Elliott](http://conal.net) has a hunch about why proving programs correct is so much more difficult. He thinks the main reason is that -- most of the time --  people attempt to prove properties about existing systems; systems designed in the absence of mathematical constraints.
 
-If "proving only at the end" is the main reason for the difficulty of proof, then it may be the case that _simultaneously_ proving and writing our programs is the solution.
+If "proving at the end" is the main reason for the difficulty of proof, then it may be the case that an approach where we simultaneously_ write _and_ prove is the solution.
 
-It is well-recognised that composing programs from simpler building blocks is a good way to construct larger programs. Another well-recognised "good thing" is the principle of _compositionality_ which says that when trying to reason about the composition of A and B, it is desirable that one should just be able to reason about A and B separately. [TODO: Find better formulations of the principle of compositionality].
+It is well-recognised principle that composing programs from simpler building blocks is a good way to construct larger programs. Another well-recognised "good thing" is the [principle of compositionality](https://en.wikipedia.org/wiki/Principle_of_compositionality) which states that when trying to reason about the composition of A and B, it is desirable that the meaning of the composition is determined by the meanings of A, B and the rules used to combine them.
 
-What if one could compose programs _and_ their proofs simulatenously? This is eminently doable in Agda. Conal has coined a name for this technique: _compositional correctness_.
+What if we were to adopt a discipline where programs _and_ their proofs where composed simultaneously? This style of programming is well-supported in dependently typed languages such as Agda, Coq, and Idris. Conal has even coined a name for this technique: _compositional correctness_.
 
-In this post we will look at an example of this in action.
+In this post we will look at an example of _compositional correctness_ in action.
 
 ## Proving at the end
 
-Define `splitPermute`
+But first, we'll take a look at constructing a program and then only "proving at the end".
 
-[TODO: Reference previous blog post]
+In my [last post](../proving-a-more-general-theorem-is-often-easier.md) we define a function called `splitPermute` as follows:
 
 ```{ htmlDir="2022-02-24-permutations" module="Permutations" delimeters="splitPermute" }
 splitPermute definition
 ```
 
-Prove later:
+We were able to prove that `splitPermute n` was the inverse of `splitPermute m`, for a given `m + n : ℕ` as follows:
 
 ```{ htmlDir="2022-02-24-permutations" module="Permutations" delimeters="inverse-proof" }
 inverse-proof
 ```
 
-Construct bijection:
+We then constructed a bijection -- called an `Inverse` in Agda -- as follows. This packages up a program with proofs of invertibility.
 
 ```{ htmlDir="2022-02-24-permutations" module="Permutations" delimeters="splitPermute-bijection-1" }
 splitPermute-bijection
 ```
-## Via _compositional correctness_
+## Construction via _compositional correctness_
 
-But there is a better way! The beautiful thing about bijections -- called `Inverse`s in Agda -- is that they have proofs bundled together with the programs. This is just what we need for _compositional correctness_.
+But there is a better way! The beautiful thing about bijections is that their proofs are bundled together with the program. This is just what we need for _compositional correctness_.
 
-I'll jump straight to the solution.
+Let's see how this is done for `splitPermute`.
 
 ```{ htmlDir="2022-02-24-permutations" module="Permutations" delimeters="splitPermute-bijection-2" }
 splitPermute-bijection
 ```
 
-That's it. The function, its inverse and accompanying proofs of invertibility/congruence have all been defined _in a single line_.
+That's it! The function, its inverse and accompanying proofs of invertibility have all been defined _in a single line_.
 
-In order to understand this code you will need to know about `+↔⊎` and `swap↔`. `+↔⊎` is defined in module `Data.Fin.Properties` and has the following definition:
+In order to understand this code you will need to study the definitions of `+↔⊎` and `swap↔`. `+↔⊎` is defined in module `Data.Fin.Properties` and has the following definition:
 
 ```{ htmlDir="2022-02-24-permutations" module="Data.Sum.Properties" fun="+↔⊎" lines="2" }
 +↔⊎ function definition
@@ -59,11 +59,12 @@ Function `swap↔` is something that I had to write myself even though all the b
 swap-bijection
 ```
 
-[TODO: Provide link to upcoming Agda repo]
+I submitted a PR to the GitHub `agda-stdlib` repository which added this function. It has now been [incorporated](https://github.com/agda/agda-stdlib/commit/9bf16e21f0fcdefd9200d4f368bbeaee67b84c75) and will appear in a future release of the Agda Standard Library.
 
-### Why does this work?
 
-The magic lies in the `∘-↔` operator defined in module `Function.Construct.Composition`. It's a synonym for `inverse` which is defined as:
+### Compositional correctness via the bijection composition operator `∘-↔`
+p
+The magic of this approach is in the `∘-↔` operator which is defined in module `Function.Construct.Composition`. It is a synonym for function `inverse` which is defined as:
 
 ```{ htmlDir="2022-02-24-permutations" module="Function.Construct.Composition" lineNumber="196" lines="8" }
 inverse
@@ -75,4 +76,18 @@ One can further understand this code by looking at:
 inverseᵇ and other definitions
 ```
 
-The one, general, proof serves whenever one wants to compose two bijections together. Amazing.
+As you can see a single, general, proof serves whenever one wants to compose two bijections together.
+
+If we compare the "prove at the end" with the compositional correctness approach, we see that in the "prove at the end" approach we had to carefully apply three different invertibility proofs (in order):
+
+1. `splitAt-join`
+2. `swap-involutive`
+3. `join-splitAt`
+
+However, by using the approach of compositional correctness, we actually applied `inverseᵇ` (under the hood) three times, and the application was implicitly done with each application of the `∘-↔` operator.
+
+## Conclusion
+
+A style of programming coined by Conal Elliott and called _compositional correctness_ can be used to reduce the cost of proving one's programs correct. "Proving at the end" involves carefully selecting _specific_ theorems while compositional correctness uses _general_ theorems (at specific types) to achieve its goals.
+
+It will remain to be seen whether compositional correctness radically reduces the difficulty of proving program correctness, but it is a very promising candidate.
