@@ -10,7 +10,7 @@ body {
   font-family: Helvetica;
   font-size: 13pt;
   margin: auto;
-  max-width: 100ch;
+  max-width: 80ch;
   width: 100%;
   flex-grow: 1;
 /*  padding: 4ch; */
