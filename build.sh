@@ -15,7 +15,7 @@ for src in *.md drafts/*.md; do
     --metadata="postDir:$POST_DIR" \
     --metadata="baseDir:$BASE" \
     --filter $BASE/pandoc-filters/AgdaSnippet.hs \
-    -c "$CSS/default.css" \
+    -c "$CSS/style.css" \
     -c "$CSS/Agda.css" \
     $src -o $BASE/site/$POST_DIR/$OUT
 done
