@@ -1,6 +1,6 @@
 % Compositional Correctness
 % Sean Seefried
-% Wed 02 Mar 2022
+% Thu 03 Mar 2022
 
 ## Introduction
 
@@ -21,7 +21,7 @@ In this post we will look at an example of _compositional correctness_ in action
 
 But first, we'll take a look at constructing a program and then only "proving at the end".
 
-In my [last post](../proving-a-more-general-theorem-is-often-easier.md) we define a function called `splitPermute` as follows:
+In my [last post](./proving-a-more-general-theorem-is-often-easier.md) we define a function called `splitPermute` as follows:
 
 ```{ htmlDir="2022-02-24-permutations" module="Permutations" delimeters="splitPermute" }
 splitPermute definition
