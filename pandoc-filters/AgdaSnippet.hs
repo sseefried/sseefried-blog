@@ -117,7 +117,7 @@ fixLinks :: Text -> Text -> Filter
 fixLinks postDir htmlDir =
     T.replace "href=\""
       (  "href=\""
-      <> if postDir == "." then "." else ".."
+      <> (if postDir == "." then "." else "..")
       <> "/agda-html/"
       <> htmlDir
       <> "/")
