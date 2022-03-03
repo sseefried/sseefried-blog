@@ -8,9 +8,12 @@ Writing and proving programs correct is generally considered to be much harder t
 
 If "proving at the end" is the main reason for the difficulty of proof, then it may be the case that an approach where we _simultaneously_ write _and_ prove is the solution.
 
-It is a well-recognised principle that composing programs from simpler building blocks is a good way to construct larger programs. Another well-recognised "good thing" is the [principle of compositionality](https://en.wikipedia.org/wiki/Principle_of_compositionality) which states that when trying to reason about the composition of A and B, it is desirable that the meaning of the composition is determined by the meanings of A, B and the rules used to combine them.
+It is a well-recognised principle that composing programs from simpler building blocks is a good way to construct larger programs. Another well-recognised "good thing" is the [principle of compositionality](https://en.wikipedia.org/wiki/Principle_of_compositionality) which states that when trying to reason about the composition of A and B, it is desirable that the meaning of the composition is determined by the meanings of A, B and the rules used to combine them. It is undesirable (and non-compositional) in the case where reasoning about A and B together either
 
-What if we were to adopt a discipline where programs _and_ their proofs where composed simultaneously? This style of programming is well-supported in dependently typed languages such as Agda, Coq, and Idris. Conal has even coined a name for this technique: _compositional correctness_.
+- can't be done by reasoning about A and B independently, or
+- is significantly more complicated than reasoning about A and B in isolation
+
+What if we were to adopt a discipline where programs _and_ their proofs were composed simultaneously? This style of programming is well-supported in dependently typed languages such as Agda, Coq, and Idris. Conal has even coined a name for this technique: _compositional correctness_.
 
 In this post we will look at an example of _compositional correctness_ in action.
 
