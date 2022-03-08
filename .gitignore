@@ -1,4 +1,5 @@
 site/*.html
 site/drafts/
+site/devlog/
 site/agda-html/
 test.sh
