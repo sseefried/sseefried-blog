@@ -18,7 +18,7 @@ In this post I'd like to show you an example of a specific program that was hard
 
 I defined a _permutation_ as a bijection from `Fin n` to `Fin n` for some `n`. For convenience I renamed `Fin` to `𝔽` because I really value conciseness and it has echoes of the `ℕ` value defined in module `Data.Nat`.
 
-``` {htmlDir="2022-02-24-permutations" module="Permutations" delimeters="Perm"}
+``` {htmlDir="2022-02-24-permutations" module="Permutations" delimiters="Perm"}
 Replaced
 ```
 
@@ -33,19 +33,19 @@ In Agda a bijection is constructed from:
 
 To start I thought I'd play around with a very simple permutation that, in the forward direction, evaluates to the successor of its input modulo `n`.
 
-``` {htmlDir="2022-02-24-permutations" module="Permutations" delimeters="plus-one-mod-n"}
+``` {htmlDir="2022-02-24-permutations" module="Permutations" delimiters="plus-one-mod-n"}
 ```
 
 And here is its inverse:
 
-``` {htmlDir="2022-02-24-permutations" module="Permutations" delimeters="minus-one-mod-n"}
+``` {htmlDir="2022-02-24-permutations" module="Permutations" delimiters="minus-one-mod-n"}
 ```
 
 I liked the definition for `-1-mod-n` much better than the definition of `+1-mod-n`, but couldn't think of an alternative way to define the latter. I then got stuck into trying to prove that `-1-mod-n` is the left-inverse of `+1-mod-n`.
 
 The proof took me many hours but eventually I came up with the following. It's a very ugly proof and the only reason I have posted it here is so that you can have the appropriate "ugh"-reaction.
 
-``` {htmlDir="2022-02-24-permutations" module="Permutations" delimeters="ugly-left-inverse-proof"}
+``` {htmlDir="2022-02-24-permutations" module="Permutations" delimiters="ugly-left-inverse-proof"}
 ```
 
 I also tried to prove that `-1-mod-n` was the right inverse of `+1-mod-n` but got stuck almost straight away and gave up.
@@ -115,7 +115,7 @@ and
 
 Simplifying these means that `join` could be rewritten as:
 
-``` {htmlDir="2022-02-24-permutations" module="Permutations" delimeters="join-direct"}
+``` {htmlDir="2022-02-24-permutations" module="Permutations" delimiters="join-direct"}
 ```
 
 The type signatures of the two functions on the RHS of the definition above are:
@@ -131,7 +131,7 @@ Function `raise` is a little different to `inject+`. It adds `n` to its argument
 
 We can now now define a function called `splitPermute` that performs the split-swap-join process that I described earlier.
 
-``` {htmlDir="2022-02-24-permutations" module="Permutations" delimeters="splitPermute"}
+``` {htmlDir="2022-02-24-permutations" module="Permutations" delimiters="splitPermute"}
 ```
 
 A really nice thing about `splitPermute` is that for a given `m + n` the inverse of `splitPermute m` is `splitPermute n`.
@@ -152,17 +152,17 @@ The proof makes use of the following three theorems from `Data.Fin.Properties` a
 
 And here is the proof!
 
-``` {htmlDir="2022-02-24-permutations" module="Permutations" delimeters="inverse-proof"}
+``` {htmlDir="2022-02-24-permutations" module="Permutations" delimiters="inverse-proof"}
 ```
 
 If you're confused about the use of `cong-[_]∘⟨_⟩∘[_]` above. It's just a nice helper function I wrote to help with _setoid_ reasoning on _extensional equality_ (`_≗_`). It is defined as follows:
 
-``` {htmlDir="2022-02-24-permutations" module="Permutations" delimeters="composition-cong"}
+``` {htmlDir="2022-02-24-permutations" module="Permutations" delimiters="composition-cong"}
 ```
 
 Agda's ability to define mixfix operators using the `_` character really shon here. See how nice the fragment below looks? The parts between the square brackets remain untouched while the law between the angle brackets (`⟨⟩`) applies a law, in this case: `swap-involutive`.
 
- ``` {htmlDir="2022-02-24-permutations" module="Permutations" delimeters="inverse-proof-snippet-1"}
+ ``` {htmlDir="2022-02-24-permutations" module="Permutations" delimiters="inverse-proof-snippet-1"}
 ```
 
 ## Conclusion

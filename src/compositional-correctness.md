@@ -23,19 +23,19 @@ But first, we'll take a look at constructing a program and then only "proving at
 
 In my [last post](./proving-a-more-general-theorem-is-often-easier.md) we define a function called `splitPermute` as follows:
 
-```{ htmlDir="2022-02-24-permutations" module="Permutations" delimeters="splitPermute" }
+```{ htmlDir="2022-02-24-permutations" module="Permutations" delimiters="splitPermute" }
 splitPermute definition
 ```
 
 We were able to prove that `splitPermute n` was the inverse of `splitPermute m`, for a given `m + n : ℕ` as follows:
 
-```{ htmlDir="2022-02-24-permutations" module="Permutations" delimeters="inverse-proof" }
+```{ htmlDir="2022-02-24-permutations" module="Permutations" delimiters="inverse-proof" }
 inverse-proof
 ```
 
 We then constructed a bijection -- called an `Inverse` in Agda -- as follows. This packages up a program with proofs of invertibility.
 
-```{ htmlDir="2022-02-24-permutations" module="Permutations" delimeters="splitPermute-bijection-1" }
+```{ htmlDir="2022-02-24-permutations" module="Permutations" delimiters="splitPermute-bijection-1" }
 splitPermute-bijection
 ```
 ## Construction via _compositional correctness_
@@ -44,7 +44,7 @@ But there is a better way! The beautiful thing about bijections is that their pr
 
 Let's see how this is done for `splitPermute`.
 
-```{ htmlDir="2022-02-24-permutations" module="Permutations" delimeters="splitPermute-bijection-2" }
+```{ htmlDir="2022-02-24-permutations" module="Permutations" delimiters="splitPermute-bijection-2" }
 splitPermute-bijection
 ```
 
@@ -58,7 +58,7 @@ In order to understand this code you will need to study the definitions of `+↔
 
 Function `swap↔` is something that I had to write myself even though all the building blocks were already present in `Data.Sum` and `Data.Sum.Properties`.
 
-```{ htmlDir="2022-02-24-permutations" module="Permutations" delimeters="swap-bijection" }
+```{ htmlDir="2022-02-24-permutations" module="Permutations" delimiters="swap-bijection" }
 swap-bijection
 ```
 

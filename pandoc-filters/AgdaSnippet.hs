@@ -16,7 +16,7 @@ import System.Process (readProcess)
 import System.Posix.Directory
 
 data Command =
-    Delimeters Text
+    Delimiters Text
   | Function Text Int
   | Signature Text
   | LineNumber Int Int
@@ -39,7 +39,7 @@ doBlock (postDir, baseDir) cb@(CodeBlock (id, classes, namevals) contents)
        let
          htmlFilter =
            case cmd of
-             Delimeters ident          -> delimitedCodeBlock ident
+             Delimiters ident          -> delimitedCodeBlock ident
              Function ident numLines   -> functionDef ident numLines
              Signature ident           -> signatureOf ident
              LineNumber start numLines -> region start numLines
@@ -49,8 +49,8 @@ doBlock (postDir, baseDir) cb@(CodeBlock (id, classes, namevals) contents)
   | otherwise = return cb
   where
     getCommand namevals
-      | Just ident <- lookup "delimeters" namevals
-      = Just (Delimeters ident)
+      | Just ident <- lookup "delimiters" namevals
+      = Just (Delimiters ident)
 
       | Just ident       <- lookup "fun" namevals
       , Just numLinesTxt <- lookup "lines" namevals
@@ -91,13 +91,13 @@ lineFilter f = T.unlines . f . T.lines
 
 delimitedCodeBlock :: Text -> Filter
 delimitedCodeBlock ident = lineFilter $
-  L.filter (not . T.isInfixOf "--pandoc-begin") . -- remove nested delimeters
-  L.filter (not . T.isInfixOf "--pandoc-end") .   -- remove nested delimeters
-  linesBetweenDelimeters ("--pandoc-begin " <> ident <> "</a>",
+  L.filter (not . T.isInfixOf "--pandoc-begin") . -- remove nested delimiters
+  L.filter (not . T.isInfixOf "--pandoc-end") .   -- remove nested delimiters
+  linesBetweendelimiters ("--pandoc-begin " <> ident <> "</a>",
                           "--pandoc-end " <> ident <> "</a>")
 
-linesBetweenDelimeters :: (Text, Text) -> [Text] -> [Text]
-linesBetweenDelimeters (start, finish) =
+linesBetweendelimiters :: (Text, Text) -> [Text] -> [Text]
+linesBetweendelimiters (start, finish) =
    L.takeWhile (not . T.isInfixOf finish) .
    L.drop 1 .
    L.dropWhile (not . T.isInfixOf start)
