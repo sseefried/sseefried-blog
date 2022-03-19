@@ -1,0 +1,3 @@
+name: 2022-03-14-delay-semiring
+depend: standard-library hardware
+include: .
